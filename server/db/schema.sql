@@ -89,7 +89,10 @@ INSERT INTO products (id, title, category, price_min, price_max, stock, active) 
 (19, 'Mullvad VPN', 'VPN', 2.00, 2.00, 100, true),
 (20, 'Nord VPN', 'VPN', 1.35, 1.35, 100, true),
 (21, 'TunnelBear VPN LifeTime', 'VPN', 0.30, 0.30, 100, true),
-(22, 'IP Vanish VPN 1 Year', 'VPN', 0.20, 0.20, 100, true)
+(22, 'IP Vanish VPN 1 Year', 'VPN', 0.20, 0.20, 100, true),
+(23, 'Discord Nuke Bot [LIFETIME]', 'Tools', 10.00, 10.00, 100, true),
+(24, 'Discord Nuke Bot [1 MONTH]', 'Tools', 3.00, 3.00, 100, true),
+(25, 'Discord Nuke Bot [1 WEEK]', 'Tools', 1.00, 1.00, 100, true)
 ON CONFLICT (id) DO UPDATE SET 
     title = EXCLUDED.title,
     category = EXCLUDED.category,
@@ -104,7 +107,7 @@ DECLARE
     pid INT;
     i INT;
 BEGIN
-    FOR pid IN 1..22 LOOP
+    FOR pid IN 1..25 LOOP
         FOR i IN 1..100 LOOP
             -- Check if key already exists to avoid spamming the DB on every start
             IF NOT EXISTS (SELECT 1 FROM product_keys WHERE product_id = pid AND key_value = 'TEST-KEY-' || pid || '-' || i) THEN
