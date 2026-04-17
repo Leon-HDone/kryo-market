@@ -8,6 +8,7 @@ import checkoutRoutes from './routes/checkout.js';
 import webhookRoutes from './routes/webhook.js';
 import ordersRoutes from './routes/orders.js';
 import productsRoutes from './routes/products.js';
+import adminRoutes from './routes/admin.js';
 import { cleanupExpiredReservations } from './services/keyService.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ─── Health Check ───────────────────────────────────────
 app.get('/api/health', (req, res) => {

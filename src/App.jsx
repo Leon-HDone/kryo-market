@@ -8,6 +8,7 @@ import ProductModal from './components/ProductModal';
 import CheckoutModal from './components/CheckoutModal';
 import OrdersModal from './components/OrdersModal';
 import LegalModal from './components/LegalModal';
+import AdminDashboard from './components/AdminDashboard';
 import { useCart } from './hooks/useCart';
 import { products } from './data/products';
 import './index.css';
@@ -38,6 +39,7 @@ export default function App() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
 
   const [legalOpen, setLegalOpen] = useState(null);
+  const [adminOpen, setAdminOpen] = useState(false);
 
   const { items, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice } = useCart();
 
@@ -166,10 +168,13 @@ export default function App() {
               . Alle Rechte vorbehalten.
             </span>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
-              {['Datenschutz', 'AGB', 'Impressum'].map(link => (
+              {['Datenschutz', 'AGB', 'Impressum', 'Admin'].map(link => (
                 <button
                   key={link}
-                  onClick={() => setLegalOpen(link)}
+                  onClick={() => {
+                    if (link === 'Admin') setAdminOpen(true);
+                    else setLegalOpen(link);
+                  }}
                   style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3d4566', transition: 'color 0.3s', fontSize: '0.82rem', padding: 0 }}
                   onMouseEnter={e => e.target.style.color = '#00b4ff'}
                   onMouseLeave={e => e.target.style.color = '#3d4566'}
@@ -224,6 +229,21 @@ export default function App() {
         type={legalOpen}
         onClose={() => setLegalOpen(null)}
       />
+
+      {/* Admin Dashboard Overlay */}
+      {adminOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 4000,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '1rem', backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          backdropFilter: 'blur(15px)',
+        }}>
+          <div style={{ position: 'absolute', inset: 0 }} onClick={() => setAdminOpen(false)} />
+          <div style={{ position: 'relative', width: '100%', maxWidth: '800px', zIndex: 1 }}>
+            <AdminDashboard />
+          </div>
+        </div>
+      )}
 
       {/* Toast */}
       {toast && <Toast message={toast} onHide={() => setToast(null)} />}
