@@ -65,3 +65,23 @@ CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(customer_email);
 CREATE INDEX IF NOT EXISTS idx_product_keys_status ON product_keys(status, product_id);
 CREATE INDEX IF NOT EXISTS idx_orders_stripe ON orders(stripe_session_id);
 CREATE INDEX IF NOT EXISTS idx_verification_email ON verification_codes(email, code);
+
+-- Seed Test Products for Backend Validation
+INSERT INTO products (id, title, category, price_min, price_max, stock, active) VALUES 
+(1, 'Test Accounts', 'Accounts', 0.99, 9.99, 100, true),
+(2, 'Test Social', 'Social', 0.99, 9.99, 100, true),
+(3, 'Test Games', 'Games', 0.99, 9.99, 100, true),
+(4, 'Test Generators', 'Generators', 0.99, 9.99, 100, true),
+(5, 'Test Methods', 'Methods', 0.99, 9.99, 100, true),
+(6, 'Test Spoofers', 'Spoofers', 0.99, 9.99, 100, true),
+(7, 'Test VPN', 'VPN', 0.99, 9.99, 100, true),
+(8, 'Test Boosting', 'Boosting', 0.99, 9.99, 100, true),
+(9, 'Test FiveM', 'FiveM', 0.99, 9.99, 100, true),
+(10, 'Test Tools', 'Tools', 0.99, 9.99, 100, true)
+ON CONFLICT (id) DO UPDATE SET 
+    title = EXCLUDED.title,
+    category = EXCLUDED.category,
+    price_min = EXCLUDED.price_min,
+    price_max = EXCLUDED.price_max,
+    stock = EXCLUDED.stock,
+    active = EXCLUDED.active;
