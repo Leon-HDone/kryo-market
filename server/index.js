@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(distPath));
   
   // SPA Fallback: Alle nicht-API Routes → index.html
-  app.get('*', (req, res) => {
+  app.get(/.*/, (req, res) => {
     if (!req.path.startsWith('/api')) {
       res.sendFile(join(distPath, 'index.html'));
     }
