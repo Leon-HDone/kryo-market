@@ -16,7 +16,8 @@ export default function AdminDashboard() {
   const handleUpload = async () => {
     if (!adminToken) return setMessage('Kein Admin-Token');
     if (!selectedProductId) return setMessage('Produkt auswählen');
-    const keys = keysText.split('\n').map(k => k.trim()).filter(k => k);
+    // Splittet bei einer oder mehreren echten Leerzeilen
+    const keys = keysText.split(/\n\s*\n/).map(k => k.trim()).filter(k => k);
     if (keys.length === 0) return setMessage('Keine Keys eingegeben');
 
     try {
@@ -70,9 +71,10 @@ export default function AdminDashboard() {
         </select>
       </div>
       <div style={{ marginBottom: '1rem' }}>
-        <label>Keys (eine pro Zeile):</label>
+        <label>Accounts/Keys (Trenne verschiedene Produkte durch eine **Leerzeile**):</label>
         <textarea
           rows={10}
+          placeholder="Produkt 1 - Zeile 1&#10;Produkt 1 - Zeile 2&#10;&#10;Produkt 2 - Zeile 1..."
           value={keysText}
           onChange={e => setKeysText(e.target.value)}
           style={{
