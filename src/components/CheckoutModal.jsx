@@ -1,5 +1,6 @@
 import { X, Mail, CreditCard, ShieldCheck, Loader2, ArrowRight } from 'lucide-react';
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
+import { Copy, CheckCircle2 } from 'lucide-react';
 
 const API_BASE = import.meta.env.PROD ? '' : 'http://localhost:3001';
 
@@ -7,11 +8,17 @@ export default function CheckoutModal({ isOpen, onClose, items, totalPrice, onSu
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cryptoView, setCryptoView] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const BTC_ADDRESS = "bc1q6qsu8cs4qzvm9ezwxzj6a7mtvp05mmqmjh7smh";
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       setError(null);
+      setCryptoView(false);
+      setCopied(false);
     } else {
       document.body.style.overflow = '';
     }
@@ -203,53 +210,116 @@ export default function CheckoutModal({ isOpen, onClose, items, totalPrice, onSu
             </div>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div style={{
-              background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-              borderRadius: '10px', padding: '0.7rem 1rem', marginBottom: '1rem',
-              color: '#f87171', fontSize: '0.8rem',
+          {/* Pay Buttons oder Crypto View */}
+          {!cryptoView ? (
+            <>
+              {error && (
+                <div style={{
+                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: '10px', padding: '0.7rem 1rem', marginBottom: '1rem',
+                  color: '#f87171', fontSize: '0.8rem',
+                }}>
+                  ⚠️ {error}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                <button
+                  onClick={handleCheckout}
+                  disabled={loading}
+                  style={{
+                    width: '100%',
+                    background: loading ? 'rgba(0,180,255,0.1)' : 'linear-gradient(135deg, #00e5ff, #0070ff, #7c3aed)',
+                    border: 'none', color: 'white', borderRadius: '12px',
+                    padding: '1rem', fontWeight: '700', fontSize: '0.95rem',
+                    cursor: loading ? 'wait' : 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
+                    transition: 'all 0.3s',
+                    boxShadow: loading ? 'none' : '0 4px 20px rgba(0, 112, 255, 0.3)',
+                    fontFamily: 'Inter, sans-serif', opacity: loading ? 0.7 : 1,
+                  }}
+                >
+                  {loading ? (
+                    <><Loader2 size={18} className="animate-spin" /> Verarbeite...</>
+                  ) : (
+                    <>Mit Stripe bezahlen <ArrowRight size={16} /></>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setCryptoView(true)}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(247, 147, 26, 0.1)',
+                    border: '1px solid rgba(247, 147, 26, 0.4)', color: '#f7931a',
+                    borderRadius: '12px', padding: '1rem', fontWeight: '700', fontSize: '0.95rem',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
+                    transition: 'all 0.3s', fontFamily: 'Inter, sans-serif',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(247, 147, 26, 0.2)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(247, 147, 26, 0.1)'}
+                >
+                  Mit Krypto bezahlen (BTC) <ArrowRight size={16} />
+                </button>
+              </div>
+
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem',
+                marginTop: '1rem', color: '#3d4566', fontSize: '0.7rem',
+              }}>
+                <span>🔒 SSL verschlüsselt</span>
+                <span>💳 Stripe Payments</span>
+                <span>🪙 Crypto Pay</span>
+              </div>
+            </>
+          ) : (
+            // Crypto Manual View
+            <div className="animate-fade-up" style={{ 
+              background: 'rgba(247, 147, 26, 0.05)', 
+              border: '1px solid rgba(247, 147, 26, 0.2)', 
+              borderRadius: '12px', padding: '1.2rem', textAlign: 'center' 
             }}>
-              ⚠️ {error}
+              <h3 style={{ color: '#f7931a', marginTop: 0, marginBottom: '0.5rem' }}>Manuelle BTC Zahlung</h3>
+              <p style={{ color: '#7e8bb6', fontSize: '0.85rem', marginBottom: '1.2rem', lineHeight: '1.5' }}>
+                Krypto-Zahlungen werden manuell abgewickelt. Sende exakt den <strong style={{color: '#fff'}}>Euro-Gegenwert (Bitcoin)</strong> an diese Adresse und melde dich mit dem Zahlungsbeleg in unserem Discord.
+              </p>
+
+              <div style={{
+                background: '#050505',
+                padding: '0.8rem', borderRadius: '8px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                marginBottom: '1.5rem', wordBreak: 'break-all', gap: '1rem'
+              }}>
+                <span style={{ color: '#fff', fontSize: '0.75rem', fontFamily: 'monospace' }}>{BTC_ADDRESS}</span>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(BTC_ADDRESS);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  style={{
+                    background: 'none', border: 'none', color: copied ? '#22c55e' : '#00b4ff',
+                    cursor: 'pointer', padding: '0.3rem', flexShrink: 0
+                  }}
+                >
+                  {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+                </button>
+              </div>
+
+              <button
+                onClick={() => { onClose(); setCryptoView(false); }}
+                style={{
+                  width: '100%', background: 'linear-gradient(135deg, #f7931a, #d97706)',
+                  border: 'none', color: 'white', borderRadius: '8px',
+                  padding: '0.8rem', fontWeight: '700', fontSize: '0.9rem', cursor: 'pointer',
+                  boxShadow: '0 4px 15px rgba(247, 147, 26, 0.3)'
+                }}
+              >
+                Ich habe bezahlt (Zurück)
+              </button>
             </div>
           )}
-
-          {/* Pay Button */}
-          <button
-            onClick={handleCheckout}
-            disabled={loading}
-            style={{
-              width: '100%',
-              background: loading
-                ? 'rgba(0,180,255,0.1)'
-                : 'linear-gradient(135deg, #00e5ff, #0070ff, #7c3aed)',
-              border: 'none', color: 'white', borderRadius: '12px',
-              padding: '1rem', fontWeight: '700', fontSize: '0.95rem',
-              cursor: loading ? 'wait' : 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
-              transition: 'all 0.3s',
-              boxShadow: loading ? 'none' : '0 4px 20px rgba(0, 112, 255, 0.3)',
-              fontFamily: 'Inter, sans-serif',
-              opacity: loading ? 0.7 : 1,
-            }}
-            onMouseEnter={e => { if (!loading) e.currentTarget.style.boxShadow = '0 6px 30px rgba(0, 112, 255, 0.5)'; }}
-            onMouseLeave={e => { if (!loading) e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 112, 255, 0.3)'; }}
-          >
-            {loading ? (
-              <><Loader2 size={18} className="animate-spin" style={{ animation: 'rotate-slow 1s linear infinite' }} /> Verarbeite...</>
-            ) : (
-              <>Mit Stripe bezahlen <ArrowRight size={16} /></>
-            )}
-          </button>
-
-          {/* Zahlungsinfos */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem',
-            marginTop: '1rem', color: '#3d4566', fontSize: '0.7rem',
-          }}>
-            <span>🔒 SSL verschlüsselt</span>
-            <span>💳 Stripe Payments</span>
-          </div>
         </div>
       </div>
     </div>
