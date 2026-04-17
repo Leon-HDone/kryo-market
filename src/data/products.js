@@ -24,7 +24,7 @@ export const products = categories.filter(c => c !== 'All').map((cat, idx) => ({
   priceMax: 9.99,
   stock: 100,
   featured: idx < 3, // Mach die ersten 3 zu "Featured"
-  imageUrl: null,
+  imageUrl: '/testbild.png',
   imageLabel: `TEST\n${cat.toUpperCase()}`,
   imageColor: `hsl(${idx * 36}, 80%, 55%)`,
   icon: '🧪',
