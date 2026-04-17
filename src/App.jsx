@@ -7,6 +7,7 @@ import Reviews from './components/Reviews';
 import ProductModal from './components/ProductModal';
 import CheckoutModal from './components/CheckoutModal';
 import OrdersModal from './components/OrdersModal';
+import LegalModal from './components/LegalModal';
 import { useCart } from './hooks/useCart';
 import { products } from './data/products';
 import './index.css';
@@ -35,6 +36,8 @@ export default function App() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+
+  const [legalOpen, setLegalOpen] = useState(null);
 
   const { items, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice } = useCart();
 
@@ -164,15 +167,15 @@ export default function App() {
             </span>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
               {['Datenschutz', 'AGB', 'Impressum'].map(link => (
-                <a
+                <button
                   key={link}
-                  href="#"
-                  style={{ color: '#3d4566', textDecoration: 'none', transition: 'color 0.3s', fontSize: '0.82rem' }}
+                  onClick={() => setLegalOpen(link)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3d4566', transition: 'color 0.3s', fontSize: '0.82rem', padding: 0 }}
                   onMouseEnter={e => e.target.style.color = '#00b4ff'}
                   onMouseLeave={e => e.target.style.color = '#3d4566'}
                 >
                   {link}
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -214,6 +217,12 @@ export default function App() {
       <OrdersModal
         isOpen={ordersOpen}
         onClose={() => setOrdersOpen(false)}
+      />
+
+      {/* Legal Modal */}
+      <LegalModal
+        type={legalOpen}
+        onClose={() => setLegalOpen(null)}
       />
 
       {/* Toast */}

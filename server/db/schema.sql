@@ -68,16 +68,28 @@ CREATE INDEX IF NOT EXISTS idx_verification_email ON verification_codes(email, c
 
 -- Seed Test Products for Backend Validation
 INSERT INTO products (id, title, category, price_min, price_max, stock, active) VALUES 
-(1, 'Test Accounts', 'Accounts', 0.99, 9.99, 100, true),
-(2, 'Test Social', 'Social', 0.99, 9.99, 100, true),
-(3, 'Test Games', 'Games', 0.99, 9.99, 100, true),
-(4, 'Test Generators', 'Generators', 0.99, 9.99, 100, true),
-(5, 'Test Methods', 'Methods', 0.99, 9.99, 100, true),
-(6, 'Test Spoofers', 'Spoofers', 0.99, 9.99, 100, true),
-(7, 'Test VPN', 'VPN', 0.99, 9.99, 100, true),
-(8, 'Test Boosting', 'Boosting', 0.99, 9.99, 100, true),
-(9, 'Test FiveM', 'FiveM', 0.99, 9.99, 100, true),
-(10, 'Test Tools', 'Tools', 0.99, 9.99, 100, true)
+(1, 'FiveM Ready Account', 'FiveM', 0.15, 0.15, 100, true),
+(2, 'Steam Ready Account', 'Games', 0.05, 0.05, 100, true),
+(3, 'Discord Aged Account 2025', 'Accounts', 0.15, 0.15, 100, true),
+(4, 'Discord Aged Account 2023', 'Accounts', 0.60, 0.60, 100, true),
+(5, 'Discord Aged Account 2020', 'Accounts', 1.20, 1.20, 100, true),
+(6, 'Discord Aged Account 2019', 'Accounts', 3.00, 3.00, 100, true),
+(7, 'Discord Aged Account 2017', 'Accounts', 5.00, 5.00, 100, true),
+(8, 'Discord Aged Account 2016', 'Accounts', 13.00, 13.00, 100, true),
+(9, 'Discord Nitro Basic (Verified)', 'Accounts', 3.00, 3.00, 100, true),
+(10, 'ChatGPT +', 'Accounts', 1.00, 1.00, 100, true),
+(11, 'Disney Lifetime', 'Accounts', 1.00, 1.00, 100, true),
+(12, 'Spotify Lifetime Account', 'Accounts', 2.00, 2.00, 100, true),
+(13, 'Netflix Lifetime', 'Accounts', 1.50, 1.50, 100, true),
+(14, 'Prime Video Lifetime', 'Accounts', 2.00, 2.00, 100, true),
+(15, 'CapCut Pro Lifetime', 'Accounts', 3.00, 3.00, 100, true),
+(16, 'HBO Max Lifetime Account', 'Accounts', 0.60, 0.60, 100, true),
+(17, 'Discord Generator [LIFETIME]', 'Generators', 20.00, 20.00, 100, true),
+(18, 'Steam Generator [LIFETIME]', 'Generators', 5.00, 5.00, 100, true),
+(19, 'Mullvad VPN', 'VPN', 2.00, 2.00, 100, true),
+(20, 'Nord VPN', 'VPN', 1.35, 1.35, 100, true),
+(21, 'TunnelBear VPN LifeTime', 'VPN', 0.30, 0.30, 100, true),
+(22, 'IP Vanish VPN 1 Year', 'VPN', 0.20, 0.20, 100, true)
 ON CONFLICT (id) DO UPDATE SET 
     title = EXCLUDED.title,
     category = EXCLUDED.category,
@@ -92,7 +104,7 @@ DECLARE
     pid INT;
     i INT;
 BEGIN
-    FOR pid IN 1..10 LOOP
+    FOR pid IN 1..22 LOOP
         FOR i IN 1..100 LOOP
             -- Check if key already exists to avoid spamming the DB on every start
             IF NOT EXISTS (SELECT 1 FROM product_keys WHERE product_id = pid AND key_value = 'TEST-KEY-' || pid || '-' || i) THEN
