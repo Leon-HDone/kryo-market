@@ -17,9 +17,13 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
 
   // Prevent background scroll when modal open
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = 'auto'; };
-  }, []);
+    if (product) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [product]);
 
   if (!product) return null;
 

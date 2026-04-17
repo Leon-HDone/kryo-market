@@ -20,8 +20,10 @@ export default function OrdersModal({ isOpen, onClose }) {
       setCode('');
       setError(null);
       setOrders([]);
+    } else {
+      document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = 'auto'; };
+    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   if (!isOpen) return null;

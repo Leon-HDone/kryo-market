@@ -12,8 +12,10 @@ export default function CheckoutModal({ isOpen, onClose, items, totalPrice, onSu
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       setError(null);
+    } else {
+      document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = 'auto'; };
+    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   if (!isOpen || items.length === 0) return null;
