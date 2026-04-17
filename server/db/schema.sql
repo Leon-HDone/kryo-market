@@ -85,3 +85,20 @@ ON CONFLICT (id) DO UPDATE SET
     price_max = EXCLUDED.price_max,
     stock = EXCLUDED.stock,
     active = EXCLUDED.active;
+
+-- Seed Test Keys for Backend Validation (Stock Check)
+DO $$
+DECLARE
+    pid INT;
+    i INT;
+BEGIN
+    FOR pid IN 1..10 LOOP
+        FOR i IN 1..100 LOOP
+            -- Check if key already exists to avoid spamming the DB on every start
+            IF NOT EXISTS (SELECT 1 FROM product_keys WHERE product_id = pid AND key_value = 'TEST-KEY-' || pid || '-' || i) THEN
+                INSERT INTO product_keys (product_id, key_value, status)
+                VALUES (pid, 'TEST-KEY-' || pid || '-' || i, 'available');
+            END IF;
+        END LOOP;
+    END LOOP;
+END $$;
