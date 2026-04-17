@@ -58,8 +58,7 @@ export default function LegalModal({ type, onClose }) {
 
       <p>
         <strong>Kontakt:</strong><br/>
-        E-Mail: support@kryomarket.example<br/>
-        Discord: Kryo Community
+        Discord: https://discord.gg/5RFzaZXFYK<br/>
       </p>
 
       <p>
@@ -86,7 +85,7 @@ export default function LegalModal({ type, onClose }) {
         display: 'flex', flexDirection: 'column',
         boxShadow: '0 25px 80px rgba(0,0,0,0.8), 0 0 60px rgba(0,180,255,0.08)',
       }} onClick={e => e.stopPropagation()}>
-        
+
         {/* Header */}
         <div style={{
           padding: '1.5rem 1.5rem',
@@ -100,8 +99,8 @@ export default function LegalModal({ type, onClose }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'white', cursor: 'pointer', transition: 'all 0.2s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,0,0,0.2)'; e.currentTarget.style.borderColor = 'red'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,0,0,0.2)'; e.currentTarget.style.borderColor = 'red'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
           ><X size={16} /></button>
         </div>
 
@@ -113,8 +112,8 @@ export default function LegalModal({ type, onClose }) {
           fontSize: '0.9rem',
           lineHeight: '1.6',
         }}>
-          <div 
-            dangerouslySetInnerHTML={{ __html: content[type] }} 
+          <div
+            dangerouslySetInnerHTML={{ __html: content[type] }}
             className="legal-content"
             style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
           />
