@@ -138,8 +138,16 @@ router.post('/create-session', async (req, res) => {
 
     res.json({ sessionUrl: session.url });
   } catch (err) {
-    console.error('❌ Checkout Fehler:', err);
-    res.status(500).json({ error: 'Checkout fehlgeschlagen. Bitte versuche es erneut.' });
+    console.error('❌ KRITISCHER CHECKOUT FEHLER:', {
+      message: err.message,
+      type: err.type,
+      raw: err.raw,
+      stack: err.stack
+    });
+    res.status(500).json({ 
+      error: 'Checkout fehlgeschlagen (Server Error).',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined 
+    });
   }
 });
 
