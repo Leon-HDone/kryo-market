@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 
 /**
  * Sendet eine Discord Webhook Benachrichtigung bei einem erfolgreichen Kauf.
