@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { confirmKeys, releaseKeys, getKeysByOrder } from '../services/keyService.js';
 import { findOrderByStripeSession, markOrderPaid, findOrderById } from '../services/orderService.js';
 import { sendKeyDelivery } from '../services/emailService.js';
+import { sendOrderWebhook } from '../services/discordService.js';
 
 const router = Router();
 
@@ -84,7 +85,8 @@ router.post('/simulate-payment', async (req, res) => {
       return res.status(404).json({ error: 'Bestellung nicht gefunden.' });
     }
 
-    await processSuccessfulPayment(order);
+    const clientIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unbekannt').toString().split(',')[0].trim();
+    await processSuccessfulPayment(order, clientIp);
     res.json({ success: true, message: 'Zahlung simuliert und Keys versendet.' });
   } catch (err) {
     console.error('❌ Simulation Fehler:', err);
@@ -104,18 +106,20 @@ async function handlePaymentSuccess(session) {
     return;
   }
 
+  const clientIp = session.metadata.client_ip || 'Unbekannt';
+
   if (order.status === 'paid') {
     console.log(`ℹ️ Order ${orderId} bereits als bezahlt markiert`);
     return;
   }
 
-  await processSuccessfulPayment(order);
+  await processSuccessfulPayment(order, clientIp);
 }
 
 /**
  * Kernlogik für erfolgreiche Zahlung: Keys bestätigen + E-Mail senden.
  */
-async function processSuccessfulPayment(order) {
+async function processSuccessfulPayment(order, clientIp) {
   // 1. Keys von reserved → sold
   const soldKeys = await confirmKeys(order.id);
   console.log(`🔑 ${soldKeys.length} Keys bestätigt für Order #${order.id}`);
@@ -143,6 +147,15 @@ async function processSuccessfulPayment(order) {
   // 4. Keys per E-Mail senden
   const emailResult = await sendKeyDelivery(order.customer_email, order, groupedKeys);
   console.log(`📧 E-Mail Ergebnis für Order #${order.id}:`, emailResult);
+
+  // 5. Discord Webhook abfeuern
+  await sendOrderWebhook({
+    orderId: order.id,
+    email: order.customer_email,
+    totalAmount: order.total_amount,
+    ipAddress: clientIp,
+    products: groupedKeys
+  });
 }
 
 /**

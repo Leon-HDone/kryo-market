@@ -127,6 +127,7 @@ router.post('/create-session', async (req, res) => {
       cancel_url: `${frontendUrl}/?checkout=cancelled`,
       metadata: {
         order_id: order.id.toString(),
+        client_ip: (req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unbekannt').toString().split(',')[0].trim(),
       },
     });
 

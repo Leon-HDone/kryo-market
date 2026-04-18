@@ -2,15 +2,17 @@ import { Crown, ShoppingCart, Package } from 'lucide-react';
 import { useState } from 'react';
 
 export function ProductImagePlaceholder({ product }) {
-  // Wenn ein eigenes Bild gesetzt ist, zeige es
-  if (product.imageUrl) {
+  const [imgError, setImgError] = useState(false);
+
+  // Wenn ein eigenes Bild gesetzt ist und es keinen Fehler gab, zeige es
+  if (product.imageUrl && !imgError) {
     return (
       <img
         src={product.imageUrl}
         alt={product.title}
         className="product-card-image"
         style={{ objectFit: 'cover' }}
-        onError={e => { e.target.style.display = 'none'; }}
+        onError={(e) => { setImgError(true); e.target.style.display = 'none'; }}
       />
     );
   }
