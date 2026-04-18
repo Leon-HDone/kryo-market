@@ -71,7 +71,7 @@ export default function Hero({ searchQuery, setSearchQuery, activeCategory, setA
             display: 'inline-block',
             animation: 'pulse-glow 2s infinite',
           }} />
-          <span className="gradient-text-brand">Premium Selection</span>
+          <span className="gradient-text-brand">Premium Products</span>
         </div>
 
         {/* Title */}
