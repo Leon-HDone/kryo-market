@@ -7,23 +7,13 @@ const DiscordIcon = () => (
   </svg>
 );
 
-// Kryo Snowflake Logo
 const KryoLogo = () => (
-  <div style={{
-    width: '38px', height: '38px',
-    background: 'linear-gradient(135deg, #00e5ff, #0070ff, #7c3aed)',
-    borderRadius: '10px',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    boxShadow: '0 0 20px rgba(0, 180, 255, 0.5), 0 0 40px rgba(124, 58, 237, 0.2)',
-    position: 'relative',
-    overflow: 'hidden',
-  }}>
-    <div style={{
-      position: 'absolute', inset: 0,
-      background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)',
-    }} />
-    <img src="/K.png" alt="K Logo" style={{ width: '22px', height: '22px', filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.5))', zIndex: 1 }} />
-  </div>
+  <img src="/K.png" alt="K Logo" style={{ 
+    width: '45px', 
+    height: '45px', 
+    objectFit: 'contain', 
+    filter: 'drop-shadow(0 0 15px rgba(0, 180, 255, 0.4))'
+  }} />
 );
 
 export default function Header({ totalItems, onCartOpen, onOrdersOpen }) {
